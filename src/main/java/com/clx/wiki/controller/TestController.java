@@ -1,10 +1,14 @@
 package com.clx.wiki.controller;
 
+import com.clx.wiki.domain.Test;
+import com.clx.wiki.service.TestService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
+import java.util.List;
 
 
 /**
@@ -15,6 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class TestController {
     @Value("${test.hello:Test}")
     private String testHello;
+
+    @Resource
+    private TestService testService;
 
     /*
     GET,POST,PUT,DELETE
@@ -33,5 +40,9 @@ public class TestController {
         return "hello world, post!" + name;
     }
 
+    @GetMapping("/test/list")
+    public List<Test> list(){
+        return testService.list();
+    }
 
 }
