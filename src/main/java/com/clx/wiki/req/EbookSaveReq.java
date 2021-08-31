@@ -1,6 +1,6 @@
-package com.clx.wiki.resp;
+package com.clx.wiki.req;
 
-public class EbookResp {
+public class EbookSaveReq {
     private Long id;
 
     private String name;
