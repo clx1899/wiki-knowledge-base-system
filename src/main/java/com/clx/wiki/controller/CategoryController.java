@@ -2,14 +2,15 @@ package com.clx.wiki.controller;
 
 import com.clx.wiki.req.CategoryQueryReq;
 import com.clx.wiki.req.CategorySaveReq;
-import com.clx.wiki.resp.CommonResp;
 import com.clx.wiki.resp.CategoryQueryResp;
+import com.clx.wiki.resp.CommonResp;
 import com.clx.wiki.resp.PageResp;
 import com.clx.wiki.service.CategoryService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.List;
 
 
 /**
@@ -22,6 +23,15 @@ public class CategoryController {
 
     @Resource
     private CategoryService categoryService;
+
+    @GetMapping("/all")
+    public CommonResp all() {
+        CommonResp<List<CategoryQueryResp>> resp = new CommonResp<>();
+        List<CategoryQueryResp> list = categoryService.all();
+        resp.setContent(list);
+        return resp;
+    }
+
 
     @GetMapping("/list")
     public CommonResp list(@Valid CategoryQueryReq req){
