@@ -8,6 +8,7 @@ import com.clx.wiki.req.EbookSaveReq;
 import com.clx.wiki.resp.EbookQueryResp;
 import com.clx.wiki.resp.PageResp;
 import com.clx.wiki.util.CopyUtil;
+import com.clx.wiki.util.SnowFlake;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
@@ -30,6 +31,9 @@ public class EbookService {
 
     @Resource
     private EbookMapper ebookMapper;
+
+    @Resource
+    private SnowFlake snowFlake;
 
     public PageResp<EbookQueryResp> list(EbookQueryReq req){
         PageHelper.startPage(1,3);
@@ -69,12 +73,13 @@ public class EbookService {
     }
 
     /**
-     *
+     *  保存
      */
     public void save(EbookSaveReq req){
         Ebook ebook = CopyUtil.copy(req,Ebook.class);
         if (ObjectUtils.isEmpty(req.getId())){
             //新增
+            ebook.setId(snowFlake.nextId());
             ebookMapper.insert(ebook);
         }else {
             //更新
