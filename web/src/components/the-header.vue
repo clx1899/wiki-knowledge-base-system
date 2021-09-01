@@ -52,61 +52,60 @@
 </template>
 
 <script lang="ts">
-  import { defineComponent, ref } from 'vue';
-  import axios from 'axios';
-  import { message } from 'ant-design-vue';
-  import store from "@/store";
+import { defineComponent, ref, computed } from 'vue';
+import axios from 'axios';
+import { message } from 'ant-design-vue';
+import store from "@/store";
 
-  declare let hexMd5: any;
-  declare let KEY: any;
+declare let hexMd5: any;
+declare let KEY: any;
 
-  export default defineComponent({
-    name: 'the-header',
-    setup () {
-      // 登录后保存
-      const user = ref();
-      user.value = {};
+export default defineComponent({
+  name: 'the-header',
+  setup () {
+    // 登录后保存
+    const user = computed(() => store.state.user);
 
-      // 用来登录
-      const loginUser = ref({
-        loginName: "test",
-        password: "test123"
+    // 用来登录
+    const loginUser = ref({
+      loginName: "test",
+      password: "test123"
+    });
+    const loginModalVisible = ref(false);
+    const loginModalLoading = ref(false);
+    const showLoginModal = () => {
+      loginModalVisible.value = true;
+    };
+
+    // 登录
+    const login = () => {
+      console.log("开始登录");
+      loginModalLoading.value = true;
+      loginUser.value.password = hexMd5(loginUser.value.password + KEY);
+      axios.post('/user/login', loginUser.value).then((response) => {
+        loginModalLoading.value = false;
+        const data = response.data;
+        if (data.success) {
+          loginModalVisible.value = false;
+          message.success("登录成功！");
+
+          store.commit("setUser", data.content);
+        } else {
+          message.error(data.message);
+        }
       });
-      const loginModalVisible = ref(false);
-      const loginModalLoading = ref(false);
-      const showLoginModal = () => {
-        loginModalVisible.value = true;
-      };
+    };
 
-      // 登录
-      const login = () => {
-        console.log("开始登录");
-        loginModalLoading.value = true;
-        loginUser.value.password = hexMd5(loginUser.value.password + KEY);
-        axios.post('/user/login', loginUser.value).then((response) => {
-          loginModalLoading.value = false;
-          const data = response.data;
-          if (data.success) {
-            loginModalVisible.value = false;
-            message.success("登录成功！");
-            user.value = data.content;
-            store.commit("setUser", user.value);
-          } else {
-            message.error(data.message);
-          }
-        });
-      };
-
-      return {
-        loginModalVisible,
-        loginModalLoading,
-        showLoginModal,
-        loginUser,
-        login,
-        user
-      }
+    return {
+      loginModalVisible,
+      loginModalLoading,
+      showLoginModal,
+      loginUser,
+      login,
+      user
     }
-  });
+  }
+});
 </script>
 
 <style>
