@@ -3,9 +3,10 @@ package com.clx.wiki.controller;
 import com.clx.wiki.req.UserQueryReq;
 import com.clx.wiki.req.UserSaveReq;
 import com.clx.wiki.resp.CommonResp;
-import com.clx.wiki.resp.UserQueryResp;
 import com.clx.wiki.resp.PageResp;
+import com.clx.wiki.resp.UserQueryResp;
 import com.clx.wiki.service.UserService;
+import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -28,6 +29,7 @@ public class UserController {
 
     @PostMapping("/save")
     public CommonResp save(@Valid @RequestBody UserSaveReq req) {
+        req.setPassword(DigestUtils.md5DigestAsHex(req.getPassword().getBytes()));
         CommonResp resp = new CommonResp<>();
         userService.save(req);
         return resp;
