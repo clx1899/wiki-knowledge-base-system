@@ -6,6 +6,7 @@ import com.clx.wiki.exception.BusinessException;
 import com.clx.wiki.exception.BusinessExceptionCode;
 import com.clx.wiki.mapper.UserMapper;
 import com.clx.wiki.req.UserQueryReq;
+import com.clx.wiki.req.UserResetPasswordReq;
 import com.clx.wiki.req.UserSaveReq;
 import com.clx.wiki.resp.PageResp;
 import com.clx.wiki.resp.UserQueryResp;
@@ -104,4 +105,13 @@ public class UserService {
             return userList.get(0);
         }
     }
+
+    /**
+     * 修改密码
+     */
+    public void resetPassword(UserResetPasswordReq req) {
+        User user = CopyUtil.copy(req, User.class);
+        userMapper.updateByPrimaryKeySelective(user);
+    }
+
 }

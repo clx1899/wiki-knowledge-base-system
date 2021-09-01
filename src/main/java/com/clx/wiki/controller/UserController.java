@@ -1,6 +1,7 @@
 package com.clx.wiki.controller;
 
 import com.clx.wiki.req.UserQueryReq;
+import com.clx.wiki.req.UserResetPasswordReq;
 import com.clx.wiki.req.UserSaveReq;
 import com.clx.wiki.resp.CommonResp;
 import com.clx.wiki.resp.PageResp;
@@ -41,4 +42,13 @@ public class UserController {
         userService.delete(id);
         return resp;
     }
+
+    @PostMapping("/reset-password")
+    public CommonResp resetPassword(@Valid @RequestBody UserResetPasswordReq req) {
+        req.setPassword(DigestUtils.md5DigestAsHex(req.getPassword().getBytes()));
+        CommonResp resp = new CommonResp<>();
+        userService.resetPassword(req);
+        return resp;
+    }
+
 }
