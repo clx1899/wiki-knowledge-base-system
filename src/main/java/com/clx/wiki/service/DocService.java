@@ -1,7 +1,9 @@
 package com.clx.wiki.service;
 
+import com.clx.wiki.domain.Content;
 import com.clx.wiki.domain.Doc;
 import com.clx.wiki.domain.DocExample;
+import com.clx.wiki.mapper.ContentMapper;
 import com.clx.wiki.mapper.DocMapper;
 import com.clx.wiki.req.DocQueryReq;
 import com.clx.wiki.req.DocSaveReq;
@@ -31,6 +33,9 @@ public class DocService {
 
     @Resource
     private DocMapper docMapper;
+
+    @Resource
+    private ContentMapper contentMapper;
 
     @Resource
     private SnowFlake snowFlake;
@@ -86,13 +91,21 @@ public class DocService {
      */
     public void save(DocSaveReq req){
         Doc doc = CopyUtil.copy(req,Doc.class);
+        Content content = CopyUtil.copy(req, Content.class);
         if (ObjectUtils.isEmpty(req.getId())){
             //新增
             doc.setId(snowFlake.nextId());
             docMapper.insert(doc);
+
+            content.setId(doc.getId());
+            contentMapper.insert(content);
         }else {
             //更新
             docMapper.updateByPrimaryKey(doc);
+            int count = contentMapper.updateByPrimaryKeyWithBLOBs(content);
+            if (count == 0) {
+                contentMapper.insert(content);
+            }
         }
 
     }
