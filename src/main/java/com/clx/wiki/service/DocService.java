@@ -16,7 +16,6 @@ import com.clx.wiki.util.CopyUtil;
 import com.clx.wiki.util.RedisUtil;
 import com.clx.wiki.util.RequestContext;
 import com.clx.wiki.util.SnowFlake;
-import com.clx.wiki.websocket.WebSocketServer;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
@@ -53,7 +52,7 @@ public class DocService {
     public RedisUtil redisUtil;
 
     @Resource
-    public WebSocketServer webSocketServer;
+    public WsService wsService;
 
 
     public List<DocQueryResp> all(Long ebookId) {
@@ -168,7 +167,7 @@ public class DocService {
         }
         // 推送消息
         Doc docDb = docMapper.selectByPrimaryKey(id);
-        webSocketServer.sendInfo("【" + docDb.getName() + "】被点赞！");
+        wsService.sendInfo("【" + docDb.getName() + "】被点赞！");
     }
 
     public void updateEbookInfo() {
