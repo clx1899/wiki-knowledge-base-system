@@ -44,9 +44,6 @@
       <a-menu-item key="/about">
         <router-link to="/about">关于我们</router-link>
       </a-menu-item>
-
-
-
     </a-menu>
 
     <a-modal
