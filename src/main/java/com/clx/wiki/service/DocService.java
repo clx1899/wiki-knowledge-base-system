@@ -3,6 +3,8 @@ package com.clx.wiki.service;
 import com.clx.wiki.domain.Content;
 import com.clx.wiki.domain.Doc;
 import com.clx.wiki.domain.DocExample;
+import com.clx.wiki.exception.BusinessException;
+import com.clx.wiki.exception.BusinessExceptionCode;
 import com.clx.wiki.mapper.ContentMapper;
 import com.clx.wiki.mapper.DocMapper;
 import com.clx.wiki.mapper.DocMapperCust;
@@ -11,6 +13,8 @@ import com.clx.wiki.req.DocSaveReq;
 import com.clx.wiki.resp.DocQueryResp;
 import com.clx.wiki.resp.PageResp;
 import com.clx.wiki.util.CopyUtil;
+import com.clx.wiki.util.RedisUtil;
+import com.clx.wiki.util.RequestContext;
 import com.clx.wiki.util.SnowFlake;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -43,6 +47,9 @@ public class DocService {
 
     @Resource
     private SnowFlake snowFlake;
+
+    @Resource
+    public RedisUtil redisUtil;
 
     public List<DocQueryResp> all(Long ebookId) {
         DocExample docExample = new DocExample();
@@ -146,7 +153,14 @@ public class DocService {
      * 点赞
      */
     public void vote(Long id) {
-        docMapperCust.increaseVoteCount(id);
+        // docMapperCust.increaseVoteCount(id);
+        // 远程IP+doc.id作为key，24小时内不能重复
+        String ip = RequestContext.getRemoteAddr();
+        if (redisUtil.validateRepeat("DOC_VOTE_" + id + "_" + ip, 3600 * 24)) {
+            docMapperCust.increaseVoteCount(id);
+        } else {
+            throw new BusinessException(BusinessExceptionCode.VOTE_REPEAT);
+        }
     }
 
 }
