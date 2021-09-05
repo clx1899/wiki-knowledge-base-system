@@ -215,5 +215,11 @@ export default defineComponent({
   height: auto;
 }
 
+/* 视频自适应 */
+.wangeditor iframe {
+  width: 100%;
+  height: 400px;
+}
+
 </style>
 
