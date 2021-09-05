@@ -63,7 +63,7 @@
             v-model:value="category.parent"
             ref="select"
         >
-          <a-select-option value="0">
+          <a-select-option :value="0">
             无
           </a-select-option>
           <a-select-option v-for="c in level1" :key="c.id" :value="c.id" :disabled="category.id === c.id">
@@ -78,7 +78,6 @@
   </a-modal>
 </template>
 
-
 <script lang="ts">
 import { defineComponent, onMounted, ref } from 'vue';
 import axios from 'axios';
@@ -91,7 +90,6 @@ export default defineComponent({
     const param = ref();
     param.value = {};
     const categorys = ref();
-
     const loading = ref(false);
 
     const columns = [
@@ -99,11 +97,11 @@ export default defineComponent({
         title: '名称',
         dataIndex: 'name'
       },
-      {
-        title: '父分类',
-        key: 'parent',
-        dataIndex: 'parent'
-      },
+      // {
+      //   title: '父分类',
+      //   key: 'parent',
+      //   dataIndex: 'parent'
+      // },
       {
         title: '顺序',
         dataIndex: 'sort'
@@ -128,7 +126,6 @@ export default defineComponent({
      */
     const level1 = ref(); // 一级分类树，children属性就是二级分类
 
-
     /**
      * 数据查询
      **/
@@ -152,8 +149,6 @@ export default defineComponent({
       });
     };
 
-
-
     // -------- 表单 ---------
     const category = ref({});
     const modalVisible = ref(false);
@@ -165,7 +160,6 @@ export default defineComponent({
         const data = response.data; // data = commonResp
         if (data.success) {
           modalVisible.value = false;
-          modalLoading.value = false;
 
           // 重新加载列表
           handleQuery();
@@ -201,17 +195,13 @@ export default defineComponent({
       });
     };
 
-
-
-
-
     onMounted(() => {
       handleQuery();
     });
 
     return {
       param,
-      //categorys,
+      // categorys,
       level1,
       columns,
       loading,
