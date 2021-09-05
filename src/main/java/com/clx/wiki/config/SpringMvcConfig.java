@@ -1,5 +1,6 @@
 package com.clx.wiki.config;
 
+import com.clx.wiki.interceptor.ActionInterceptor;
 import com.clx.wiki.interceptor.LoginInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -12,6 +13,10 @@ public class SpringMvcConfig implements WebMvcConfigurer {
 
     @Resource
     LoginInterceptor loginInterceptor;
+
+    @Resource
+    ActionInterceptor actionInterceptor;
+
 
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(loginInterceptor)
@@ -27,5 +32,11 @@ public class SpringMvcConfig implements WebMvcConfigurer {
                         "/doc/find-content/**",
                         "/ebook-snapshot/**"
                 );
+
+        registry.addInterceptor(actionInterceptor)
+                .addPathPatterns(
+                        "/*/save",
+                        "/*/delete/**",
+                        "/*/reset-password");
     }
 }
