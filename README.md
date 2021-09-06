@@ -1,4 +1,4 @@
-# SpringBoot知识体系+Vue3 实战WIKI知识库系统
+# SpringBoot+Vue3 WIKI知识库系统
 
 
 ## 项目初始化
